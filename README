@@ -1,4 +1,9 @@
 merb_wheels
 ===========
 
-A plugin for the Merb framework that provides ...
+A plugin for the Merb framework that adds back of the more useful Rails view helpers.
+
+Allows Rails developers to easily ramp up on Merb without.
+
+We'll also provide a nice rake task that will allow you to find these Rails methods
+and eventually convert them to Merb on your own schedule, without having stuff break.
