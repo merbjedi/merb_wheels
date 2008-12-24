@@ -5,7 +5,14 @@ module MerbWheels
   module Plugin
     @@root_dir = File.dirname(__FILE__) / "merb_wheels"
     def self.load
+      
+      # load html-scanner
+       Dir[@@root_dir / "html-scanner" / "*.rb"].each do |file_path|
+        Kernel.load(file_path)
+      end
+      
       Kernel.load(@@root_dir / "ordered_hash.rb")
+      Kernel.load(@@root_dir / "sanitizer.rb")
       Kernel.load(@@root_dir / "util.rb")
       
       # load core_ext extensions
@@ -27,18 +34,19 @@ MerbWheels::Plugin.load
 # make sure we're running inside Merb
 if defined?(Merb::Plugins)
 
+  # make helpers available to the view
+  ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::DateHelpers
+  ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::JavascriptHelpers
+  ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::NumberHelpers
+  ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::SanitizeHelpers
+  ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::TagHelpers
+  ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::TextHelpers
+  ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::UrlHelpers
+
   # Merb gives you a Merb::Plugins.config hash...feel free to put your stuff in your piece of it
   Merb::Plugins.config[:merb_wheels] = {}
   
   Merb::BootLoader.before_app_loads do
-    # make helpers available to the view
-    ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::DateHelpers
-    ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::JavascriptHelpers
-    ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::NumberHelpers
-    ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::SanitizeHelpers
-    ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::TagHelpers
-    ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::TextHelpers
-    ::Merb::GlobalHelpers.send :include, MerbWheels::Helpers::UrlHelpers
   end
   
   Merb::BootLoader.after_app_loads do
